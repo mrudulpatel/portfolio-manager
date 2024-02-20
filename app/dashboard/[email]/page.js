@@ -358,9 +358,9 @@ const Dashboard = () => {
 										<TableCell sx={{ textAlign: "center", fontSize: '15px' }} className="border">
 											{((stock.price * stock.quantity) - (stock.buy * stock.quantity)).toFixed(2)}
 										</TableCell>
-										<TableCell sx={{ textAlign: "center" }} className="border p-2 flex items-center justify-between">
+										<TableCell sx={{ textAlign: "center" }} className="border p-2 flex items-center justify-around">
 											<button
-												className="bg-red-500 transition duration-100 ease-in-out border-red-500 hover:bg-red-400 text-white w-full p-2 rounded-md"
+												className="bg-red-500 transition duration-100 ease-in-out border-red-500 hover:bg-red-400 text-white max-w-full p-2 rounded-md"
 												onClick={() => {
 													confirm(`Are you sure you want to delete ${stock.companyName}?`) &&
 														(async () => {
@@ -380,7 +380,7 @@ const Dashboard = () => {
 											</button>
 											<Dialog.Root>
 												<Dialog.Trigger asChild className="">
-													<button className="bg-green-700 transition duration-100 ease-in-out border-green-500 hover:bg-green-400 ml-2 text-white w-full p-2 rounded-md" onClick={() => {
+													<button className="bg-green-700 transition duration-100 ease-in-out border-green-500 hover:bg-green-400 ml-2 text-white max-w-full p-2 rounded-md" onClick={() => {
 														setSymbol(stock.symbol);
 														setQuantity(stock.quantity);
 														setBuy(stock.buy);
