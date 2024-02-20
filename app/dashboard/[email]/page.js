@@ -358,7 +358,7 @@ const Dashboard = () => {
 										<TableCell sx={{ textAlign: "center", fontSize: '15px' }} className="border">
 											{((stock.price * stock.quantity) - (stock.buy * stock.quantity)).toFixed(2)}
 										</TableCell>
-										<TableCell sx={{ textAlign: "center" }} className="border p-2 flex items-center justify-evenly">
+										<TableCell sx={{ textAlign: "center" }} className="border p-2 flex items-center justify-between">
 											<button
 												className="bg-red-500 transition duration-100 ease-in-out border-red-500 hover:bg-red-400 text-white w-full p-2 rounded-md"
 												onClick={() => {
