@@ -3,10 +3,7 @@ import db from "@/firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
-  const payload = await req.json();
-  const { email } = payload;
-  console.log("Email: ", email);
+export async function GET(req, res) {
   const colRef = collection(db, "stocks");
   let stocks = [];
   let finalStocks = [];
