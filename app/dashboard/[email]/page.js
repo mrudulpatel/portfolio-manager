@@ -79,6 +79,7 @@ const Dashboard = () => {
 							"Accept": "application/json"
 						}
 					});
+					console.log("Fetching Data for ", doc.data().symbol);
 					const data = await res.json();
 					if (data && data.data !== null) {
 						const { pricecurrent: price, "52L": low, "52H": high, company: companyName } = data.data;
