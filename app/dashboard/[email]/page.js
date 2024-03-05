@@ -578,6 +578,8 @@ const Dashboard = () => {
                         textAlign: "center",
                         fontSize: "15px",
                         fontWeight: "bold",
+                        color:
+                          stock.className === "text-red-600" ? "red" : "green",
                       }}
                       className={`border ${stock.className}`}
                     >
@@ -588,6 +590,8 @@ const Dashboard = () => {
                         textAlign: "center",
                         fontSize: "15px",
                         fontWeight: "bold",
+                        color:
+                          stock.className === "text-red-600" ? "red" : "green",
                       }}
                       className={`border ${stock.className}`}
                     >
