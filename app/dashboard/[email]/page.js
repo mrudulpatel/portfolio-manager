@@ -591,7 +591,7 @@ const Dashboard = () => {
                       }}
                       className={`border ${stock.className}`}
                     >
-                      {stock?.pricepercentchange}%
+                      {parseFloat(stock?.pricepercentchange).toFixed(2)}%
                     </TableCell>
 
                     <TableCell
