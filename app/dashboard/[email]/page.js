@@ -122,10 +122,10 @@ const Dashboard = () => {
               pricepercentchange: pricepercentchange,
               className:
                 parseFloat(priceChange) === 0.0
-                  ? "text-gray-800"
+                  ? "!text-gray-800"
                   : parseFloat(priceChange) < 0.0
-                  ? "text-red-600"
-                  : "text-green-600",
+                  ? "!text-red-600"
+                  : "!text-green-600",
               companyName: companyName,
             };
           }
@@ -195,10 +195,10 @@ const Dashboard = () => {
                 low: low,
                 className:
                   parseFloat(priceChange).toFixed(2) === 0.0
-                    ? "text-gray-800"
+                    ? "!text-gray-800"
                     : parseFloat(priceChange).toFixed(2) < 0.0
-                    ? "text-red-600"
-                    : "text-green-600",
+                    ? "!text-red-600"
+                    : "!text-green-600",
                 priceChange: parseFloat(priceChange)?.toFixed(2),
                 companyName: companyName,
               };
@@ -578,8 +578,6 @@ const Dashboard = () => {
                         textAlign: "center",
                         fontSize: "15px",
                         fontWeight: "bold",
-                        color:
-                          stock.className === "text-red-600" ? "red" : "green",
                       }}
                       className={`border ${stock.className}`}
                     >
@@ -590,8 +588,6 @@ const Dashboard = () => {
                         textAlign: "center",
                         fontSize: "15px",
                         fontWeight: "bold",
-                        color:
-                          stock.className === "text-red-600" ? "red" : "green",
                       }}
                       className={`border ${stock.className}`}
                     >
