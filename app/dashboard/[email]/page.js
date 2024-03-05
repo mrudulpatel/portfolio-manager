@@ -413,131 +413,131 @@ const Dashboard = () => {
               <TableRow sx={{ textAlign: "center !important" }}>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border w-[fit-content]"
+                  className="border-4 w-[fit-content]"
                 >
                   Sr. No.
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Stock Name
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Current Price
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Price Change (%)
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   52 Week High
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   52 Week Low
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Quantity
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Buy Price
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   % Less from high
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Latest Value
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Overall Gain/Loss %
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Overall Gain/Loss (in ₹)
                 </TableCell>
                 <TableCell
                   sx={{
-                    background: "black",
-                    color: "white !important",
+                    background: "white",
+                    color: "black !important",
                     textAlign: "center ",
                   }}
-                  className="border"
+                  className="border-4"
                 >
                   Actions
                 </TableCell>
@@ -547,7 +547,7 @@ const Dashboard = () => {
             <TableBody sx={{ textAlign: "center !important" }}>
               {stocks.length === 0 ? (
                 <TableRow>
-                  <TableCell className="text-white text-center" colSpan="11">
+                  <TableCell className="text-black border-4 bg-white text-center" colSpan="13">
                     No Stocks Added
                   </TableCell>
                 </TableRow>
@@ -555,21 +555,17 @@ const Dashboard = () => {
                 stocks.map((stock, index) => (
                   <TableRow
                     key={index}
-                    className={
-                      index % 2 === 0
-                        ? "bg-blue-300 text-black"
-                        : "bg-blue-200 text-black"
-                    }
+                    className="text-black border-4 bg-white"
                   >
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {index + 1}
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {stock.companyName}
                     </TableCell>
@@ -579,7 +575,7 @@ const Dashboard = () => {
                         fontSize: "15px",
                         fontWeight: "bold",
                       }}
-                      className={`border ${stock.className}`}
+                      className={`border-4 ${stock.className}`}
                     >
                       {stock.price}
                     </TableCell>
@@ -589,32 +585,32 @@ const Dashboard = () => {
                         fontSize: "15px",
                         fontWeight: "bold",
                       }}
-                      className={`border ${stock.className}`}
+                      className={`border-4 ${stock.className}`}
                     >
                       {parseFloat(stock?.pricepercentchange).toFixed(2)}%
                     </TableCell>
 
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {stock.high}
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {stock.low}
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {stock.quantity}
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {stock.buy.toFixed(2)}
                     </TableCell>
@@ -624,7 +620,7 @@ const Dashboard = () => {
                         fontSize: "15px",
                         fontWeight: "bold",
                       }}
-                      className="border"
+                      className="border-4"
                     >
                       {(
                         ((stock.high - stock.price) / stock.high) *
@@ -633,13 +629,13 @@ const Dashboard = () => {
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {(stock.price * stock.quantity).toFixed(2)}
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {(((stock.price - stock.buy) / stock.buy) * 100).toFixed(
                         2
@@ -647,7 +643,7 @@ const Dashboard = () => {
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border"
+                      className="border-4"
                     >
                       {(
                         stock.price * stock.quantity -
@@ -656,7 +652,7 @@ const Dashboard = () => {
                     </TableCell>
                     <TableCell
                       sx={{ textAlign: "center" }}
-                      className="border p-2 flex items-center justify-around"
+                      className="border-4 p-2 flex items-center justify-around"
                     >
                       <button
                         className="bg-red-500 transition duration-100 ease-in-out border-red-500 hover:bg-red-400 text-white max-w-full p-2 rounded-md"
