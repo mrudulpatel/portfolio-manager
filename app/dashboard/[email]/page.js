@@ -118,7 +118,7 @@ const Dashboard = () => {
               price: price,
               high: high,
               low: low,
-              pricechange: priceChange,
+              priceChange: priceChange,
               pricepercentchange: pricepercentchange,
               className:
                 parseFloat(priceChange) === 0.0
@@ -180,6 +180,7 @@ const Dashboard = () => {
                 "52H": high,
                 company: companyName,
                 pricechange: priceChange,
+                pricepercentchange: pricepercentchange,
               } = data.data;
 
               // Calculate price change from stocks array
@@ -190,6 +191,7 @@ const Dashboard = () => {
                 buy: doc.data().buy,
                 price: price,
                 high: high,
+                pricepercentchange,
                 low: low,
                 className:
                   parseFloat(priceChange).toFixed(2) === 0.0
@@ -447,7 +449,7 @@ const Dashboard = () => {
                   }}
                   className="border"
                 >
-                  Price Change
+                  Price Change (%)
                 </TableCell>
                 <TableCell
                   sx={{
@@ -589,7 +591,7 @@ const Dashboard = () => {
                       }}
                       className={`border ${stock.className}`}
                     >
-                      {stock.priceChange} ({stock?.pricepercentchange}%)
+                      {stock?.pricepercentchange}%
                     </TableCell>
 
                     <TableCell
