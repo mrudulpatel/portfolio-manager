@@ -118,7 +118,7 @@ const sendMail = async (stockName, price, percentLessFromHigh, gain) => {
     <h1 class="text-2xl font-bold text-gray-800">Portfolio Update</h1>
     <p class="mt-4">Your stock <span class="font-semibold">${stockName}</span> (CMP: ${price}) in your portfolio is <span class="font-semibold">${percentLessFromHigh}%</span> less from 52-Week High.</p>
     <p class="mt-2">Your overall gain % is <span class="font-semibold">${gain}%</span>.</p>
-    <p class="mt-2">To manage your portfolio <a href="https://www.moneycontrol.com/bestportfolio/wealth-management-tool/investments#port_top" class="text-blue-500 hover:underline">click here</a>.</p>
+    <p class="mt-2">To manage your portfolio <a href="https://portfolio-manager-nse.vercel.app" class="text-blue-500 hover:underline">click here</a>.</p>
     <p class="mt-4">Please review your portfolio and manage your stocks accordingly.</p>
     <div class="mt-8 border-t border-gray-200 pt-4 text-sm text-gray-600">
       <p>Regards,</p>

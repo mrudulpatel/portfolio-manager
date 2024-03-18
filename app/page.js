@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -16,6 +16,11 @@ export default function Home() {
       alert("Invalid Credentials! Please try again.");
     }
   };
+  useEffect(() => {
+    if(sessionStorage.getItem("email")){
+      router.push(`/dashboard/${sessionStorage.getItem("email")}`);
+    }
+  }, [router]);
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="text-4xl font-bold">Portfolio Manager</h1>

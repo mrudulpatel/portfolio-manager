@@ -23,11 +23,11 @@ import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const [stocks, setStocks] = React.useState([]);
-  const [stocksPrev, setStocksPrev] = React.useState([]); // Previous stock data [price, high, low, priceChange]
   const [symbol, setSymbol] = React.useState("");
   const [quantity, setQuantity] = React.useState(0);
   const [buy, setBuy] = React.useState(0);
   const router = useRouter();
+  const [loading, setLoading] = React.useState(true);
 
   const handleAddStock = (e) => {
     e.preventDefault();
@@ -80,10 +80,11 @@ const Dashboard = () => {
     if (email !== "ncpatel25@gmail.com") {
       router.push("/");
     }
-  }, []);
+  }, [router]);
 
   // Fetching stock data when component mounts
   React.useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       const stocksCollection = collection(db, "stocks");
       onSnapshot(stocksCollection, async (snap) => {
@@ -147,6 +148,7 @@ const Dashboard = () => {
             return 0;
           })
         );
+        setLoading(false);
       });
     };
     fetchData();
@@ -545,248 +547,279 @@ const Dashboard = () => {
             </TableHead>
 
             <TableBody sx={{ textAlign: "center !important" }}>
-              {stocks.length === 0 ? (
-                <TableRow>
-                  <TableCell className="text-black border-4 bg-white text-center" colSpan="13">
-                    No Stocks Added
-                  </TableCell>
-                </TableRow>
-              ) : (
-                stocks.map((stock, index) => (
-                  <TableRow
-                    key={index}
-                    className="text-black border-4 bg-white"
-                  >
+              {!loading ? (
+                stocks.length === 0 ? (
+                  <TableRow>
                     <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
+                      rowSpan={13}
+                      className="text-black border-4 bg-white text-center"
+                      colSpan={13}
                     >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {stock.companyName}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                      }}
-                      className={`border-4 ${stock.className}`}
-                    >
-                      {stock.price}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                      }}
-                      className={`border-4 ${stock.className}`}
-                    >
-                      {parseFloat(stock?.pricepercentchange).toFixed(2)}%
-                    </TableCell>
-
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {stock.high}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {stock.low}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {stock.quantity}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {stock.buy.toFixed(2)}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                      }}
-                      className="border-4"
-                    >
-                      {(
-                        ((stock.high - stock.price) / stock.high) *
-                        100
-                      ).toFixed(2)}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {(stock.price * stock.quantity).toFixed(2)}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {(((stock.price - stock.buy) / stock.buy) * 100).toFixed(
-                        2
-                      )}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center", fontSize: "15px" }}
-                      className="border-4"
-                    >
-                      {(
-                        stock.price * stock.quantity -
-                        stock.buy * stock.quantity
-                      ).toFixed(2)}
-                    </TableCell>
-                    <TableCell
-                      sx={{ textAlign: "center" }}
-                      className="border-4 p-2 flex items-center justify-around"
-                    >
-                      <button
-                        className="bg-red-500 transition duration-100 ease-in-out border-red-500 hover:bg-red-400 text-white max-w-full p-2 rounded-md"
-                        onClick={() => {
-                          confirm(
-                            `Are you sure you want to delete ${stock.companyName}?`
-                          ) &&
-                            (async () => {
-                              const colRef = collection(db, "stocks");
-                              const querySnapshot = await getDocs(colRef);
-                              querySnapshot.forEach(async (doc) => {
-                                if (doc.data().symbol === stock.symbol) {
-                                  await deleteDoc(doc.ref).then(() => {
-                                    alert("Stock Deleted Successfully");
-                                  });
-                                }
-                              });
-                            })();
-                        }}
-                      >
-                        Delete
-                      </button>
-                      <Dialog.Root>
-                        <Dialog.Trigger asChild className="">
-                          <button
-                            className="bg-green-700 transition duration-100 ease-in-out border-green-500 hover:bg-green-400 ml-2 text-white max-w-full p-2 rounded-md"
-                            onClick={() => {
-                              setSymbol(stock.symbol);
-                              setQuantity(stock.quantity);
-                              setBuy(stock.buy);
-                            }}
-                          >
-                            Edit
-                          </button>
-                        </Dialog.Trigger>
-                        <Dialog.Portal>
-                          <Dialog.Overlay className=" data-[state=open]:animate-overlayShow fixed inset-0" />
-                          <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white text-black p-[25px] focus:outline-none">
-                            <Dialog.Title className=" m-0 text-[17px] font-medium">
-                              Edit {stock.companyName}
-                            </Dialog.Title>
-                            <Dialog.Description className=" mt-[10px] mb-5 text-[15px] leading-normal"></Dialog.Description>
-                            <form onSubmit={handleEditStock}>
-                              <fieldset className="mb-[15px] flex items-center gap-5">
-                                <label
-                                  className="w-[140px] text-left text-[15px]"
-                                  htmlFor="Stock Symbol"
-                                >
-                                  Stock Symbol Code (moneycontrol)
-                                </label>
-                                <input
-                                  className="border  inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none  outline-none "
-                                  id="Stock Symbol"
-                                  type="text"
-                                  readOnly
-                                  value={symbol}
-                                  onChange={(e) =>
-                                    setSymbol(e.target.value.toUpperCase())
-                                  }
-                                />
-                              </fieldset>
-                              <fieldset className="mb-[15px] flex items-center gap-5">
-                                <label
-                                  className="w-[140px] text-left text-[15px]"
-                                  htmlFor="Purchase Quantity"
-                                >
-                                  Purchase Quantity
-                                </label>
-                                <input
-                                  className="border inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none  outline-none "
-                                  id="Purchase Quantity"
-                                  type="number"
-                                  value={quantity}
-                                  onChange={(e) => setQuantity(e.target.value)}
-                                />
-                              </fieldset>
-                              <fieldset className="mb-[15px] flex items-center gap-5">
-                                <label
-                                  className="w-[140px] text-left text-[15px]"
-                                  htmlFor="Buy Price"
-                                >
-                                  Buy Price
-                                </label>
-                                <input
-                                  className="border inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none  outline-none "
-                                  id="Buy Price"
-                                  type="text"
-                                  value={buy}
-                                  onChange={(e) => setBuy(e.target.value)}
-                                />
-                              </fieldset>
-                              <div className="mt-[25px] flex justify-end">
-                                <Dialog.Close
-                                  asChild
-                                  id="dialog_close"
-                                  onClick={() => {
-                                    setSymbol("");
-                                    setQuantity(0);
-                                    setBuy(0);
-                                  }}
-                                >
-                                  <button className="bg-red-500 hover:bg-red-600  inline-flex h-[35px] transition duration-100 ease-in-out items-center justify-center rounded-[4px] px-[15px] font-medium leading-none  focus:outline-none">
-                                    Cancel
-                                  </button>
-                                </Dialog.Close>
-                                <button
-                                  type="submit"
-                                  className="bg-green-400 ml-3 hover:bg-green-500 transition duration-100 ease-in-out inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none  focus:outline-none"
-                                >
-                                  Update
-                                </button>
-                              </div>
-                            </form>
-                            <Dialog.Close
-                              asChild
-                              onClick={() => {
-                                setSymbol("");
-                                setQuantity(0);
-                                setBuy(0);
-                              }}
-                            >
-                              <button
-                                className=" focus: absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full  focus:outline-none"
-                                aria-label="Close"
-                              >
-                                <Cross2Icon />
-                              </button>
-                            </Dialog.Close>
-                          </Dialog.Content>
-                        </Dialog.Portal>
-                      </Dialog.Root>
+                      No Stocks Found
                     </TableCell>
                   </TableRow>
-                ))
+                ) : (
+                  stocks.map((stock, index) => (
+                    <TableRow
+                      key={index}
+                      className="text-black border-4 bg-white"
+                    >
+                      {/* Index */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {index + 1}
+                      </TableCell>
+                      {/* Stock Name */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {stock.companyName}
+                      </TableCell>
+                      {/* Current Price */}
+                      <TableCell
+                        sx={{
+                          textAlign: "center",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                        }}
+                        className={`border-4 ${stock.className}`}
+                      >
+                        {stock.price}
+                      </TableCell>
+                      {/* Price change */}
+                      <TableCell
+                        sx={{
+                          textAlign: "center",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                        }}
+                        className={`border-4 ${stock.className}`}
+                      >
+                        {parseFloat(stock?.pricepercentchange).toFixed(2)}%
+                      </TableCell>
+                      {/* 52 week high */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {stock.high}
+                      </TableCell>
+                      {/* 52 week low */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {stock.low}
+                      </TableCell>
+                      {/* Quantity */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {stock.quantity}
+                      </TableCell>
+                      {/* Buy Price */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {stock.buy.toFixed(2)}
+                      </TableCell>
+                      {/* % less from high */}
+                      <TableCell
+                        sx={{
+                          textAlign: "center",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                        }}
+                        className="border-4"
+                      >
+                        {(
+                          ((stock.high - stock.price) / stock.high) *
+                          100
+                        ).toFixed(2)}
+                      </TableCell>
+                      {/* Latest Value */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {(stock.price * stock.quantity).toFixed(2)}
+                      </TableCell>
+                      {/* Overall Gain/Loss in % */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {(
+                          ((stock.price - stock.buy) / stock.buy) *
+                          100
+                        ).toFixed(2)}
+                      </TableCell>
+                      {/* Overall Gain/loss in ₹ */}
+                      <TableCell
+                        sx={{ textAlign: "center", fontSize: "15px" }}
+                        className="border-4"
+                      >
+                        {(
+                          stock.price * stock.quantity -
+                          stock.buy * stock.quantity
+                        ).toFixed(2)}
+                      </TableCell>
+                      {/* Buttons */}
+                      <TableCell
+                        sx={{ textAlign: "center" }}
+                        className="border-4 p-2 flex items-center justify-around"
+                      >
+                        <button
+                          className="bg-red-500 transition duration-100 ease-in-out border-red-500 hover:bg-red-400 text-white max-w-full p-2 rounded-md"
+                          onClick={() => {
+                            confirm(
+                              `Are you sure you want to delete ${stock.companyName}?`
+                            ) &&
+                              (async () => {
+                                const colRef = collection(db, "stocks");
+                                const querySnapshot = await getDocs(colRef);
+                                querySnapshot.forEach(async (doc) => {
+                                  if (doc.data().symbol === stock.symbol) {
+                                    await deleteDoc(doc.ref).then(() => {
+                                      alert("Stock Deleted Successfully");
+                                    });
+                                  }
+                                });
+                              })();
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <Dialog.Root>
+                          <Dialog.Trigger asChild className="">
+                            <button
+                              className="bg-green-700 transition duration-100 ease-in-out border-green-500 hover:bg-green-400 ml-2 text-white max-w-full p-2 rounded-md"
+                              onClick={() => {
+                                setSymbol(stock.symbol);
+                                setQuantity(stock.quantity);
+                                setBuy(stock.buy);
+                              }}
+                            >
+                              Edit
+                            </button>
+                          </Dialog.Trigger>
+                          <Dialog.Portal>
+                            <Dialog.Overlay className=" data-[state=open]:animate-overlayShow fixed inset-0" />
+                            <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white text-black p-[25px] focus:outline-none">
+                              <Dialog.Title className=" m-0 text-[17px] font-medium">
+                                Edit {stock.companyName}
+                              </Dialog.Title>
+                              <Dialog.Description className=" mt-[10px] mb-5 text-[15px] leading-normal"></Dialog.Description>
+                              <form onSubmit={handleEditStock}>
+                                <fieldset className="mb-[15px] flex items-center gap-5">
+                                  <label
+                                    className="w-[140px] text-left text-[15px]"
+                                    htmlFor="Stock Symbol"
+                                  >
+                                    Stock Symbol Code (moneycontrol)
+                                  </label>
+                                  <input
+                                    className="border  inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none  outline-none "
+                                    id="Stock Symbol"
+                                    type="text"
+                                    readOnly
+                                    value={symbol}
+                                    onChange={(e) =>
+                                      setSymbol(e.target.value.toUpperCase())
+                                    }
+                                  />
+                                </fieldset>
+                                <fieldset className="mb-[15px] flex items-center gap-5">
+                                  <label
+                                    className="w-[140px] text-left text-[15px]"
+                                    htmlFor="Purchase Quantity"
+                                  >
+                                    Purchase Quantity
+                                  </label>
+                                  <input
+                                    className="border inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none  outline-none "
+                                    id="Purchase Quantity"
+                                    type="number"
+                                    value={quantity}
+                                    onChange={(e) =>
+                                      setQuantity(e.target.value)
+                                    }
+                                  />
+                                </fieldset>
+                                <fieldset className="mb-[15px] flex items-center gap-5">
+                                  <label
+                                    className="w-[140px] text-left text-[15px]"
+                                    htmlFor="Buy Price"
+                                  >
+                                    Buy Price
+                                  </label>
+                                  <input
+                                    className="border inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none  outline-none "
+                                    id="Buy Price"
+                                    type="text"
+                                    value={buy}
+                                    onChange={(e) => setBuy(e.target.value)}
+                                  />
+                                </fieldset>
+                                <div className="mt-[25px] flex justify-end">
+                                  <Dialog.Close
+                                    asChild
+                                    id="dialog_close"
+                                    onClick={() => {
+                                      setSymbol("");
+                                      setQuantity(0);
+                                      setBuy(0);
+                                    }}
+                                  >
+                                    <button className="bg-red-500 hover:bg-red-600  inline-flex h-[35px] transition duration-100 ease-in-out items-center justify-center rounded-[4px] px-[15px] font-medium leading-none  focus:outline-none">
+                                      Cancel
+                                    </button>
+                                  </Dialog.Close>
+                                  <button
+                                    type="submit"
+                                    className="bg-green-400 ml-3 hover:bg-green-500 transition duration-100 ease-in-out inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none  focus:outline-none"
+                                  >
+                                    Update
+                                  </button>
+                                </div>
+                              </form>
+                              <Dialog.Close
+                                asChild
+                                onClick={() => {
+                                  setSymbol("");
+                                  setQuantity(0);
+                                  setBuy(0);
+                                }}
+                              >
+                                <button
+                                  className=" focus: absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full  focus:outline-none"
+                                  aria-label="Close"
+                                >
+                                  <Cross2Icon />
+                                </button>
+                              </Dialog.Close>
+                            </Dialog.Content>
+                          </Dialog.Portal>
+                        </Dialog.Root>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )
+              ) : (
+                <TableRow>
+                  <TableCell
+                    rowSpan={13}
+                    className="text-black border-4 bg-white text-center"
+                    colSpan={13}
+                  >
+                    Loading...
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>
