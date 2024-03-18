@@ -56,53 +56,36 @@ export async function GET(req, res) {
 
           if (parseFloat(percentLessFromHigh).toFixed(2) > 25.0) {
             console.log("Sending mail for: ", stock.symbol);
-            const res = await sendMail(
-              companyName,
-              price,
-              percentLessFromHigh,
-              gain
-            );
-            if (res) {
-              console.log("Mail sent successfully");
-            } else {
-              console.log("Mail sending failed");
-            }
+            return sendMail(companyName, price, percentLessFromHigh, gain);
           } else {
             console.log(
               "Stock is not less than 25% from high for: ",
               stock.symbol
             );
+            return false; // Return false for stocks not meeting criteria
           }
-          return {
-            symbol: stock.symbol,
-            percentLessFromHigh: parseFloat(percentLessFromHigh).toFixed(2),
-            price: parseFloat(price).toFixed(2),
-            low: parseFloat(low).toFixed(2),
-            high: parseFloat(high).toFixed(2),
-            companyName,
-          };
         }
       } catch (error) {
         console.error("Error fetching data for", stock.symbol, error);
+        return false; // Return false for any errors
       }
     });
 
     // Use Promise.all to wait for all promises to resolve
-    const finalStocks = await Promise.all(promises);
-    return finalStocks.filter((stock) => stock); // Filter out undefined values
+    const results = await Promise.all(promises);
+    return results.filter((result) => result !== false); // Filter out false values
   };
 
   finalStocks = await fetchStockData(stocks);
-  // console.log("Final Stocks: ", finalStocks);
 
-  return NextResponse.json({ finalStocks });
+  return NextResponse.json({ message: "All emails sent successfully" });
 }
 
 const sendMail = async (stockName, price, percentLessFromHigh, gain) => {
   var mailOptions = {
     from: "Portfolio Manager <mrudulpatel0401@gmail.com>",
-    to: "ncpatel25@gmail.com",
-    cc: ["aaryapatel0619@gmail.com", "mrudulpatel04@gmail.com"],
+    to: "mrudulpatel04@gmail.com",
+    // cc: ["aaryapatel0619@gmail.com", "mrudulpatel04@gmail.com"],
     subject: `Stock Alert for ${stockName}`,
     html: `<!DOCTYPE html>
 <html lang="en">
@@ -130,17 +113,12 @@ const sendMail = async (stockName, price, percentLessFromHigh, gain) => {
 </html>`,
   };
 
-  let res = undefined;
-
-  await transporter
-    .sendMail(mailOptions)
-    .then(() => {
-      res = true;
-    })
-    .catch((err) => {
-      console.log(err);
-      res = false;
-    });
-
-  return res;
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Mail sent successfully for: ", stockName);
+    return true;
+  } catch (error) {
+    console.log("Mail sending failed for: ", stockName, error);
+    return false;
+  }
 };
