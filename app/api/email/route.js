@@ -56,7 +56,9 @@ export async function GET(req, res) {
 
           if (parseFloat(percentLessFromHigh).toFixed(2) > 25.0) {
             console.log("Sending mail for: ", stock.symbol);
-            return sendMail(companyName, price, percentLessFromHigh, gain);
+            await sendMail(companyName, price, percentLessFromHigh, gain).then((data) => {
+              return data;
+            });
           } else {
             console.log(
               "Stock is not less than 25% from high for: ",
@@ -114,11 +116,19 @@ const sendMail = async (stockName, price, percentLessFromHigh, gain) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log("Mail sent successfully for: ", stockName);
-    return true;
+    await transporter.sendMail(mailOptions).then((info) => {
+      console.log("Message sent: %s", info);
+      console.log("Mail sent successfully for: ", stockName);
+      return {
+        message: "Mail sent successfully",
+        info: info.accepted
+      };
+    });
   } catch (error) {
     console.log("Mail sending failed for: ", stockName, error);
-    return false;
+    return {
+      message: "Mail sending failed",
+      error: error
+    };
   }
 };
